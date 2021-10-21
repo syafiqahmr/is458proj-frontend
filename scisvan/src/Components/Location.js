@@ -9,7 +9,7 @@ class Location extends Component {
     this.state = {
       parcelId: "",
       location: "",
-      api: process.env.API_URL,
+      api: "http://127.0.0.1:5000",
       hideResultSuccess: true
     }
   }
@@ -21,22 +21,30 @@ class Location extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ seller: this.state.seller })
+      body: JSON.stringify({
+        id: this.state.parcelId,
+        location: this.state.location
+      })
     };
-    this.setState({
-      hideResultSuccess: false,
-    });
 
-    // fetch(this.state.api, requestOptions).then(res => res.json()).then(
-    //   (data) => {
-    //     this.setState({
-    //       hideParcelDetails: false,
-    //     });
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // )
+    fetch(this.state.api + "/updateLocation", requestOptions).then(res => res.json()).then(
+      (data) => {
+        this.setState({
+          hideResultSuccess: false
+        });
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+  handleChange(evt) {
+    const value = evt.target.value;
+    this.setState({
+      [evt.target.name]: value
+    });
   }
 
   render() {
@@ -51,11 +59,11 @@ class Location extends Component {
               <h3 className="my-3">Update Parcel Location</h3>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Parcel Id</Form.Label>
-                <Form.Control type="text" value={this.state.parcelId} />
+                <Form.Control type="text" value={this.state.parcelId} name="parcelId" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Location</Form.Label>
-                <Form.Control type="text" value={this.state.location} />
+                <Form.Control type="text" value={this.state.location} name="location" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Button variant="primary" onClick={() => this.postData()}>
                 Submit
