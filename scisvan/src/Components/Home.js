@@ -8,34 +8,36 @@ class Home extends Component {
     super(props);
     this.state = {
       parcelId: "",
-      api: process.env.API_URL,
+      data: [],
+      api: "https://u2vjogr2z0.execute-api.us-east-1.amazonaws.com/default/GetAnalyticsData ",
       hideParcelDetails: true
     }
   }
 
-  postData() {
+  componentDidMount() {
     const requestOptions = {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
       },
-      body: JSON.stringify({ seller: this.state.seller })
     };
-    this.setState({
-      hideParcelDetails: false,
-    });
 
-    // fetch(this.state.api, requestOptions).then(res => res.json()).then(
-    //   (data) => {
-    //     this.setState({
-    //       hideParcelDetails: false,
-    //     });
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // )
+    fetch(this.state.api).then(res => res.json()).then(
+      (data) => {
+        this.setState({
+          hideParcelDetails: false,
+          data: data
+        });
+        console.log(data);
+        console.log(this.state.data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
   }
 
   render() {
@@ -53,17 +55,21 @@ class Home extends Component {
                 <tr>
                   <th>Date</th>
                   <th>No of parcels</th>
+                  <th>Open</th>
+                  <th>Close</th>
+                  <th>Average Price</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>13/06/2021</td>
-                  <td>100</td>
-                </tr>
-                <tr>
-                  <td>14/06/2021</td>
-                  <td>100</td>
-                </tr>
+                {this.state.data.map((d) => (
+                  <tr>
+                    <td>{d[1]}</td>
+                    <td>{d[2]}</td>
+                    <td>{d[3]}</td>
+                    <td>{d[4]}</td>
+                    <td>{Math.round(d[5])}</td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </Container>
