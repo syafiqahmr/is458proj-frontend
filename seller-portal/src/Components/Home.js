@@ -14,7 +14,7 @@ class Home extends Component {
       location: "",
       destination: "",
       price: 0,
-      api: "http://127.0.0.1:5000",
+      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/parcels/",
       hideParcelDetails: true
     }
   }
@@ -27,9 +27,9 @@ class Home extends Component {
       }
     };
 
-    fetch(this.state.api + "/getParcelByID/" + this.state.parcelId, requestOptions).then(res => res.json()).then(
+    fetch(this.state.api + this.state.parcelId, requestOptions).then(res => res.json()).then(
       (data) => {
-        data = data[0]
+        data = data.parcels[0];
         this.setState({
           seller: data[1],
           buyer: data[2],

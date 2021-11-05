@@ -15,7 +15,7 @@ class Create extends Component {
       price: "",
       hideResultSuccess: true,
       trackingNo: "",
-      api: "http://127.0.0.1:5000"
+      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/parcels"
     }
   }
 
@@ -36,9 +36,9 @@ class Create extends Component {
       })
     };
 
-    fetch(this.state.api + "/create", requestOptions).then(res => res.json()).then(
+    fetch(this.state.api, requestOptions).then(res => res.json()).then(
       (data) => {
-        data = data[0]
+        data = data.parcels[0]
         this.setState({
           trackingNo: data[0],
           hideResultSuccess: false

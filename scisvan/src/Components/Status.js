@@ -9,7 +9,7 @@ class Status extends Component {
     this.state = {
       parcelId: "",
       status: "",
-      api: "http://127.0.0.1:5000",
+      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/status",
       hideResultSuccess: true
     }
   }
@@ -27,7 +27,7 @@ class Status extends Component {
       })
     };
 
-    fetch(this.state.api + "/updateStatus", requestOptions).then(res => res.json()).then(
+    fetch(this.state.api, requestOptions).then(res => res.json()).then(
       (data) => {
         this.setState({
           hideResultSuccess: false,
