@@ -30,14 +30,15 @@ class Home extends Component {
     fetch(this.state.api + this.state.parcelId, requestOptions).then(res => res.json()).then(
       (data) => {
         data = data.parcels[0];
+        console.log(data);
         this.setState({
           seller: data[1],
           buyer: data[2],
           weight: data[3],
-          location: data[4],
-          destination: data[5],
-          price: data[6],
-          status: data[7],
+          location: data[5],
+          destination: data[6],
+          price: data[7],
+          status: data[8],
           hideParcelDetails: false
         })
       },
@@ -73,12 +74,15 @@ class Home extends Component {
                 <h5 className="mb-3">Parcel Details</h5>
                 <p>Parcel ID: {this.state.parcelId}</p>
                 <p>Seller: {this.state.seller}</p>
-                <p>Buyer: {this.state.seller}</p>
+                <p>Buyer: {this.state.buyer}</p>
                 <p>Weight: {this.state.weight}</p>
                 <p>Location: {this.state.location}</p>
                 <p>Destination: {this.state.destination}</p>
                 <p>Price: {this.state.price}</p>
-                <p>Status: {this.state.status}</p>
+                {this.state.status ?
+                  <p>Status: {this.state.status}</p>
+                  : null
+                }
               </div>
               : null
             }

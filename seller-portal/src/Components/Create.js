@@ -38,7 +38,9 @@ class Create extends Component {
 
     fetch(this.state.api, requestOptions).then(res => res.json()).then(
       (data) => {
-        data = data.parcels[0]
+        console.log(requestOptions.body);
+        data = data.parcels[0];
+        console.log(data);
         this.setState({
           trackingNo: data[0],
           hideResultSuccess: false
