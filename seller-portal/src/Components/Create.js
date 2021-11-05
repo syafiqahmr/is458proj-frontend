@@ -9,13 +9,13 @@ class Create extends Component {
     this.state = {
       seller: "",
       buyer: "",
-      weight: 0,
+      weight: "",
       location: "",
       destination: "",
-      price: 0,
+      price: "",
       hideResultSuccess: true,
       trackingNo: "",
-      api: process.env.API_URL
+      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/parcels"
     }
   }
 
@@ -26,23 +26,36 @@ class Create extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ seller: this.state.seller })
+      body: JSON.stringify({
+        seller: this.state.seller,
+        buyer: this.state.buyer,
+        weight: this.state.weight,
+        location: this.state.location,
+        destination: this.state.destination,
+        price: this.state.price
+      })
     };
 
-    this.setState({
-      hideResultSuccess: false,
-    });
+    fetch(this.state.api, requestOptions).then(res => res.json()).then(
+      (data) => {
+        data = data.parcels[0]
+        this.setState({
+          trackingNo: data[0],
+          hideResultSuccess: false
+        });
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
 
-    // fetch(this.state.api, requestOptions).then(res => res.json()).then(
-    //   (data) => {
-    //     this.setState({
-    //       hideResultSuccess: false,
-    //     });
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // )
+  handleChange(evt) {
+    const value = evt.target.value;
+    this.setState({
+      [evt.target.name]: value
+    });
   }
   render() {
     return (
@@ -56,27 +69,27 @@ class Create extends Component {
               <h4 className="my-3">Create your parcel</h4>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Seller</Form.Label>
-                <Form.Control type="text" value={this.state.seller} />
+                <Form.Control type="text" value={this.state.seller} name="seller" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Buyer</Form.Label>
-                <Form.Control type="text" value={this.state.buyer} />
+                <Form.Control type="text" value={this.state.buyer} name="buyer" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Weight</Form.Label>
-                <Form.Control type="text" value={this.state.weight} />
+                <Form.Control type="text" value={this.state.weight} name="weight" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Location</Form.Label>
-                <Form.Control type="text" value={this.state.location} />
+                <Form.Control type="text" value={this.state.location} name="location" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Destination</Form.Label>
-                <Form.Control type="text" value={this.state.destination} />
+                <Form.Control type="text" value={this.state.destination} name="destination" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Price</Form.Label>
-                <Form.Control type="text" value={this.state.price} />
+                <Form.Control type="text" value={this.state.price} name="price" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Button variant="primary" onClick={() => this.postData()}>
                 Create

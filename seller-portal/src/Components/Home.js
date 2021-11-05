@@ -8,34 +8,47 @@ class Home extends Component {
     super(props);
     this.state = {
       parcelId: "",
-      api: process.env.API_URL,
+      seller: "",
+      buyer: "",
+      weight: 0,
+      location: "",
+      destination: "",
+      price: 0,
+      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/parcels/",
       hideParcelDetails: true
     }
   }
 
   postData() {
     const requestOptions = {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ seller: this.state.seller })
+      }
     };
-    this.setState({
-      hideParcelDetails: false,
-    });
 
-    // fetch(this.state.api, requestOptions).then(res => res.json()).then(
-    //   (data) => {
-    //     this.setState({
-    //       hideParcelDetails: false,
-    //     });
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // )
+    fetch(this.state.api + this.state.parcelId, requestOptions).then(res => res.json()).then(
+      (data) => {
+        data = data.parcels[0];
+        this.setState({
+          seller: data[1],
+          buyer: data[2],
+          weight: data[3],
+          location: data[4],
+          destination: data[5],
+          price: data[6],
+          status: data[7],
+          hideParcelDetails: false
+        })
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+  handleChange(event) {
+    this.setState({ parcelId: event.target.value });
   }
 
   render() {
@@ -49,7 +62,7 @@ class Home extends Component {
             <Form>
               <h4 className="my-3">Track your parcel</h4>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Control type="text" placeholder="Enter parcel tracking id" value={this.state.parcelId} />
+                <Form.Control type="text" placeholder="Enter parcel tracking id" value={this.state.parcelId} onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Button variant="primary" onClick={() => this.postData()}>
                 Submit
@@ -57,9 +70,15 @@ class Home extends Component {
             </Form>
             {!this.state.hideParcelDetails ?
               <div className="my-3 border-top py-3">
-                <h5>Parcel Details</h5>
-                <p>Parcel ID: </p>
-                <p>Status: </p>
+                <h5 className="mb-3">Parcel Details</h5>
+                <p>Parcel ID: {this.state.parcelId}</p>
+                <p>Seller: {this.state.seller}</p>
+                <p>Buyer: {this.state.seller}</p>
+                <p>Weight: {this.state.weight}</p>
+                <p>Location: {this.state.location}</p>
+                <p>Destination: {this.state.destination}</p>
+                <p>Price: {this.state.price}</p>
+                <p>Status: {this.state.status}</p>
               </div>
               : null
             }

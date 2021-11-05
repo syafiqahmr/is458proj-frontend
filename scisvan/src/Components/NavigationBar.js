@@ -13,10 +13,8 @@ class NavigationBar extends Component {
             <Navbar.Brand href="/">SCISVan</Navbar.Brand>
             <Nav className="me-auto">
               <Nav.Link><Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Home</Link></Nav.Link>
-              <Nav.Link><Link to="/today" style={{ textDecoration: 'none', color: 'inherit' }}>Today</Link></Nav.Link>
               <Nav.Link><Link to="/status" style={{ textDecoration: 'none', color: 'inherit' }}>Status</Link></Nav.Link>
               <Nav.Link><Link to="/location" style={{ textDecoration: 'none', color: 'inherit' }}>Location</Link></Nav.Link>
-
             </Nav>
           </Container>
         </Navbar>

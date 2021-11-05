@@ -9,7 +9,7 @@ class Status extends Component {
     this.state = {
       parcelId: "",
       status: "",
-      api: process.env.API_URL,
+      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/status",
       hideResultSuccess: true
     }
   }
@@ -21,23 +21,33 @@ class Status extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ seller: this.state.seller })
+      body: JSON.stringify({
+        id: this.state.parcelId,
+        status: this.state.status
+      })
     };
-    this.setState({
-      hideResultSuccess: false,
-    });
 
-    // fetch(this.state.api, requestOptions).then(res => res.json()).then(
-    //   (data) => {
-    //     this.setState({
-    //       hideParcelDetails: false,
-    //     });
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // )
+    fetch(this.state.api, requestOptions).then(res => res.json()).then(
+      (data) => {
+        this.setState({
+          hideResultSuccess: false,
+        });
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
   }
+
+
+  handleChange(evt) {
+    const value = evt.target.value;
+    this.setState({
+      [evt.target.name]: value
+    });
+  }
+
 
   render() {
     return (
@@ -51,11 +61,11 @@ class Status extends Component {
               <h3 className="my-3">Update Parcel Status</h3>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Parcel Id</Form.Label>
-                <Form.Control type="text" value={this.state.parcelId} />
+                <Form.Control type="text" value={this.state.parcelId} name="parcelId" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Status</Form.Label>
-                <Form.Control type="text" value={this.state.status} />
+                <Form.Control type="text" value={this.state.status} name="status" onChange={(event) => this.handleChange(event)} />
               </Form.Group>
               <Button variant="primary" onClick={() => this.postData()}>
                 Submit
