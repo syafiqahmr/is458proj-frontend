@@ -9,12 +9,17 @@ class Status extends Component {
     this.state = {
       parcelId: "",
       status: "",
-      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/status",
-      hideResultSuccess: true
+      api: "https://6i7fwdnnph.execute-api.us-east-1.amazonaws.com/api/status",
+      hideResultSuccess: true,
+      showUpdating: false,
+      showError: false
     }
   }
 
   postData() {
+    this.setState({
+      showUpdating: true
+    });
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -29,12 +34,24 @@ class Status extends Component {
 
     fetch(this.state.api, requestOptions).then(res => res.json()).then(
       (data) => {
-        this.setState({
-          hideResultSuccess: false,
-        });
+        if (data.parcels.length === 0) {
+          this.setState({
+            showUpdating: false,
+            showError: true
+          });
+        } else {
+          this.setState({
+            hideResultSuccess: false,
+            showUpdating: false
+          });
+        }
         console.log(data);
       },
       (error) => {
+        this.setState({
+          showUpdating: false,
+          showError: true
+        });
         console.log(error);
       }
     )
@@ -44,7 +61,9 @@ class Status extends Component {
   handleChange(evt) {
     const value = evt.target.value;
     this.setState({
-      [evt.target.name]: value
+      [evt.target.name]: value,
+      showError: false,
+      hideResultSuccess: true
     });
   }
 
@@ -73,9 +92,23 @@ class Status extends Component {
             </Form>
             {!this.state.hideResultSuccess ?
               <div className="my-3">
-                <p>Successfully updated!</p>
+                <p className='text-success'>Successfully updated!</p>
               </div>
               : null}
+            {this.state.showUpdating ?
+              <div>
+                <br />
+                <p className='text-secondary'>Updating....</p>
+              </div>
+              : null
+            }
+            {this.state.showError ?
+              <div>
+                <br />
+                <p className='text-danger'>Invalid id!</p>
+              </div>
+              : null
+            }
           </Container>
         </Container>
       </div>
