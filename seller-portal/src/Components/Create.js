@@ -15,11 +15,15 @@ class Create extends Component {
       price: "",
       hideResultSuccess: true,
       trackingNo: "",
-      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/parcels"
+      api: "https://6i7fwdnnph.execute-api.us-east-1.amazonaws.com/api/parcels",
+      showCreating: false
     }
   }
 
   postData() {
+    this.setState({
+      showCreating: true
+    });
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -43,7 +47,8 @@ class Create extends Component {
         console.log(data);
         this.setState({
           trackingNo: data[0],
-          hideResultSuccess: false
+          hideResultSuccess: false,
+          showCreating: false
         });
         console.log(data);
       },
@@ -56,7 +61,8 @@ class Create extends Component {
   handleChange(evt) {
     const value = evt.target.value;
     this.setState({
-      [evt.target.name]: value
+      [evt.target.name]: value,
+      hideResultSuccess: true
     });
   }
   render() {
@@ -103,6 +109,13 @@ class Create extends Component {
                 <p>Tracking number : {this.state.trackingNo}</p>
               </div>
               : null}
+            {this.state.showCreating ?
+              <div>
+                <br />
+                <p className='text-secondary'>Creating....</p>
+              </div>
+              : null
+            }
           </Container>
         </Container>
       </div >

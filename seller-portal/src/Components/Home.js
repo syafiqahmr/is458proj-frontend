@@ -14,8 +14,10 @@ class Home extends Component {
       location: "",
       destination: "",
       price: 0,
-      api: "https://hvl2bglabg.execute-api.us-east-1.amazonaws.com/api/parcels/",
-      hideParcelDetails: true
+      api: "https://6i7fwdnnph.execute-api.us-east-1.amazonaws.com/api/parcels/",
+      hideParcelDetails: true,
+      showError: false,
+      showRetrieving: false
     }
   }
 
@@ -26,21 +28,32 @@ class Home extends Component {
         'Accept': 'application/json',
       }
     };
+    this.setState({
+      showRetrieving: true
+    })
 
     fetch(this.state.api + this.state.parcelId, requestOptions).then(res => res.json()).then(
       (data) => {
-        data = data.parcels[0];
         console.log(data);
-        this.setState({
-          seller: data[1],
-          buyer: data[2],
-          weight: data[3],
-          location: data[5],
-          destination: data[6],
-          price: data[7],
-          status: data[8],
-          hideParcelDetails: false
-        })
+        if (data === null || data.parcels === null || data.parcels.length === 0) {
+          this.setState({
+            showError: true,
+            showRetrieving: false
+          })
+        } else {
+          data = data.parcels[0];
+          this.setState({
+            seller: data[1],
+            buyer: data[2],
+            weight: data[3],
+            location: data[5],
+            destination: data[6],
+            price: data[7],
+            status: data[8],
+            hideParcelDetails: false,
+            showRetrieving: false
+          })
+        }
       },
       (error) => {
         console.log(error);
@@ -49,7 +62,12 @@ class Home extends Component {
   }
 
   handleChange(event) {
-    this.setState({ parcelId: event.target.value });
+    this.setState({
+      parcelId: event.target.value,
+      hideParcelDetails: true,
+      showRetrieving: false,
+      showError: false
+    });
   }
 
   render() {
@@ -83,6 +101,20 @@ class Home extends Component {
                   <p>Status: {this.state.status}</p>
                   : null
                 }
+              </div>
+              : null
+            }
+            {this.state.showError ?
+              <div>
+                <br />
+                <p className='text-danger'>Invalid ID!</p>
+              </div>
+              : null
+            }
+            {this.state.showRetrieving ?
+              <div>
+                <br />
+                <p className='text-secondary'>Retrieving data....</p>
               </div>
               : null
             }
